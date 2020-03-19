@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // splash screen, transition after 3 seconds
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
