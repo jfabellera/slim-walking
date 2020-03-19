@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,12 +25,15 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class homepage extends AppCompatActivity {
+
     private TextToSpeech tts;
     private static final int RECOGNIZER_RESULT = 1;
     ImageButton inputButton;
     EditText dst;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,15 +60,41 @@ public class homepage extends AppCompatActivity {
             }
         });
 
+        // TODO: fix for keyboard input
+        dst.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                Intent intent = new Intent(homepage.this, calculating.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
         inputButton.setOnTouchListener(new View.OnTouchListener() {
-            Timer t;
-            boolean held;
-//            @SuppressLint("ClickableViewAccessibility")
+            Timer t, t2;
+            boolean held, doubleTapped;
+            long start = 0, curr = 0;
+            int doubleTapDelay = 350;
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         inputButton.setAlpha(0.85f);
+                        doubleTapped = false;
+                        start = curr;
+                        curr = System.currentTimeMillis();
+                        if(curr - start < doubleTapDelay) {
+                            // double tap detected, cancel original speak message timer
+                            t2.cancel();
+                            doubleTapped = true;
+                        }
+
                         //start timer
                         t = new Timer();
                         held = false;
@@ -78,13 +109,23 @@ public class homepage extends AppCompatActivity {
 
                                 held = true;
                             }
-                        }, 1000); //time out 5s
+                        }, 1000); //time out 1s
                         return true;
                     case MotionEvent.ACTION_UP:
                         inputButton.setAlpha(1f);
                         t.cancel();
-                        if(!held) {
-                            speak("Hold button to enter destination. Double tap to hear instructions.");
+                        if(!held && !doubleTapped) {
+                            // print this message unless interrupted by a double tap, start timer
+                            t2 = new Timer();
+                            t2.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    speak("Hold button to enter destination. Double tap to hear instructions.");
+                                }
+                            }, doubleTapDelay);
+                        } else if (doubleTapped) {
+                            // TODO : ADD INSTRUCTIONS
+                            speak("Add instructions here");
                         }
                         return true;
                 }
