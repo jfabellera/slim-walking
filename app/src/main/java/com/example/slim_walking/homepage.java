@@ -33,6 +33,7 @@ public class homepage extends AppCompatActivity {
     private static final int RECOGNIZER_RESULT = 1;
     ImageButton inputButton;
     EditText dst;
+    static String strDst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +159,7 @@ public class homepage extends AppCompatActivity {
         if(requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             dst.setText(matches.get(0).toString());
+            strDst = dst.getText().toString();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
