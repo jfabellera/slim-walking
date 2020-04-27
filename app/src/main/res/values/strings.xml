@@ -2,4 +2,10 @@
     <string name="app_name">slim-walking</string>
     <string name="map_key" translatable="false">AIzaSyAxMan4lLSDQu3jqnUKwyX3-cnLgX51m0Q</string>
     <string name="title_activity_maps">Map</string>
+    <string name="instruction_ver">1.0</string>
+    <string name="instruction_dialog">This application is designed to help blind people navigate through the bottom floor of ECSS.
+        Press and hold the screen until you hear a sound, after which you can say your destination, which is a room number.
+        If it exists, the application will tell you to take a number of steps or turn to some angle.
+        After you have taken a step or turned, tap the screen, so the application will know where you are.
+        You will shortly arrive at your destination.</string>
 </resources>

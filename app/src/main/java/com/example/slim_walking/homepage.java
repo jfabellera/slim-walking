@@ -31,6 +31,8 @@ public class homepage extends AppCompatActivity {
 
     private TextToSpeech tts;
     private static final int RECOGNIZER_RESULT = 1;
+    InstructionController instructions;
+    EmergencyController emergency;
     ImageButton inputButton;
     EditText dst;
     static String strDst;
@@ -39,6 +41,9 @@ public class homepage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        instructions = new InstructionController(this);
+        emergency = new EmergencyController(this);
 
         inputButton = findViewById(R.id.inputButton);
         dst = findViewById(R.id.dst);
@@ -107,10 +112,25 @@ public class homepage extends AppCompatActivity {
                                 speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                                 speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say your destination");
                                 startActivityForResult(speechIntent, RECOGNIZER_RESULT);
-
                                 held = true;
                             }
                         }, 1000); //time out 1s
+                        t.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                finishActivity(RECOGNIZER_RESULT);
+                                speak("Continue holding button for 5 more seconds for emergency.");
+                                held = true;
+                            }
+                        }, 2000); //time out 1s
+                        t.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                // TODO : launch phone app and call
+                                speak(emergency.callLocal());
+                                held = true;
+                            }
+                        }, 8000); //time out 1s
                         return true;
                     case MotionEvent.ACTION_UP:
                         inputButton.setAlpha(1f);
@@ -125,8 +145,7 @@ public class homepage extends AppCompatActivity {
                                 }
                             }, doubleTapDelay);
                         } else if (doubleTapped) {
-                            // TODO : ADD INSTRUCTIONS
-                            speak("Add instructions here");
+                            speak(instructions.getDialog());
                         }
                         return true;
                 }
