@@ -1,103 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="rooms">
-        <item>2.101</item>
         <item>2.102</item>
-        <item>2.102D</item>
-        <item>2.102D1</item>
         <item>2.103</item>
-        <item>2.103A</item>
-        <item>2.103B</item>
-        <item>2.103B1</item>
         <item>2.104</item>
-        <item>2.104A</item>
-        <item>2.104A1</item>
-        <item>2.104B</item>
-        <item>2.1D1</item>
-        <item>2.1E4</item>
         <item>2.201</item>
-        <item>2.201A</item>
-        <item>2.202</item>
         <item>2.203</item>
-        <item>2.204</item>
-        <item>2.2D1</item>
-        <item>2.2E1</item>
-        <item>2.2R1</item>
-        <item>2.2R1A</item>
-        <item>2.2R2</item>
-        <item>2.2R2A</item>
-        <item>2.303A</item>
-        <item>2.304</item>
         <item>2.305</item>
-        <item>2.305A</item>
         <item>2.306</item>
-        <item>2.306A</item>
-        <item>2.307</item>
-        <item>2.308</item>
-        <item>2.310</item>
         <item>2.311</item>
-        <item>2.311A</item>
         <item>2.312</item>
-        <item>2.312A</item>
-        <item>2.313</item>
-        <item>2.3C1</item>
-        <item>2.3D2</item>
-        <item>2.3E2</item>
-        <item>2.3R1</item>
-        <item>2.401</item>
-        <item>2.402</item>
-        <item>2.409</item>
         <item>2.410</item>
-        <item>2.411</item>
         <item>2.412</item>
-        <item>2.413</item>
-        <item>2.414</item>
         <item>2.415</item>
-        <item>2.416</item>
-        <item>2.4D1</item>
-        <item>2.4D2</item>
-        <item>2.4R3</item>
-        <item>2.4R3A</item>
-        <item>2.4R4A</item>
-        <item>2.4V1</item>
-        <item>2.502</item>
-        <item>2.502A</item>
-        <item>2.503</item>
-        <item>2.504</item>
-        <item>2.505</item>
-        <item>2.506</item>
-        <item>2.507</item>
-        <item>2.508</item>
-        <item>2.509</item>
-        <item>2.510</item>
-        <item>2.511</item>
-        <item>2.512</item>
-        <item>2.601</item>
-        <item>2.602</item>
-        <item>2.603</item>
-        <item>2.604</item>
-        <item>2.701</item>
-        <item>2.702</item>
-        <item>2.703</item>
-        <item>2.704</item>
-        <item>2.705</item>
-        <item>2.706</item>
-        <item>2.707</item>
-        <item>2.708</item>
-        <item>2.709</item>
-        <item>2.710</item>
-        <item>2.711</item>
-        <item>2.712</item>
-        <item>2.713</item>
-        <item>2.714</item>
-        <item>2.715</item>
-        <item>2.716</item>
-        <item>2.717</item>
-        <item>2.718</item>
-        <item>2.801</item>
-        <item>2.802</item>
-        <item>2.803</item>
-        <item>2.804</item>
-        <item>2.805</item>
     </string-array>
 </resources>

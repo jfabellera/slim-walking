@@ -12,7 +12,6 @@ import java.util.Locale;
 public class calculating extends AppCompatActivity {
     private TextToSpeech tts;
     private String[] rooms;
-    static String dst;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +35,11 @@ public class calculating extends AppCompatActivity {
                         if(roomIndex < 0) {
                             speak("Room not found, please try again.");
                             Intent intent = new Intent(calculating.this, homepage.class);
+                            startActivity(intent);
+                        } else {
+
+
+                            Intent intent = new Intent(calculating.this, navigation.class);
                             startActivity(intent);
                         }
                     }

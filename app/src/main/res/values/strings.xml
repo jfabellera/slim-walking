@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">slim-walking</string>
+    <string name="map_key" translatable="false">AIzaSyAxMan4lLSDQu3jqnUKwyX3-cnLgX51m0Q</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
