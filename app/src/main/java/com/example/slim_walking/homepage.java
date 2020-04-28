@@ -122,7 +122,7 @@ public class homepage extends AppCompatActivity {
                                 speak("Continue holding button for 5 more seconds for emergency.");
                                 held = true;
                             }
-                        }, 2000); //time out 1s
+                        }, 3000); //time out 1s
                         t.schedule(new TimerTask() {
                             @Override
                             public void run() {

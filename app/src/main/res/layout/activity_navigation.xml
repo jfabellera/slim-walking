@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_mic_black_48" />
+        app:srcCompat="@drawable/baseline_navigate_next_black_48dp" />
 
 <!--    <com.google.android.gms.maps.MapView-->
 <!--        android:id="@+id/mapView"-->

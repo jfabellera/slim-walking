@@ -12,10 +12,14 @@ import java.util.Locale;
 public class calculating extends AppCompatActivity {
     private TextToSpeech tts;
     private String[] rooms;
+    RouteController route;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculating);
+
+        route = new RouteController(this);
+        route.dijkstra(19);
 
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -58,6 +62,7 @@ public class calculating extends AppCompatActivity {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    // binary search the rooms
     private int findRoom(String r) {
         int first = 0, last = rooms.length -1;
         while(first <= last) {
