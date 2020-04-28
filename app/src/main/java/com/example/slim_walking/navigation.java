@@ -98,7 +98,9 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
                         t.schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                speak(""); // cancel tts if tts is running
+//                                speak(""); // cancel tts if tts is running
+
+                                tts.speak("", TextToSpeech.QUEUE_FLUSH, null);
                                 held = true;
                             }
                         }, 1000); //time out 1s
@@ -106,7 +108,7 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
                             @Override
                             public void run() {
                                 finishActivity(RECOGNIZER_RESULT);
-                                speak("Continue holding button for 5 more seconds for emergency.");
+                                tts.speak("Continue holding button for 5 more seconds for emergency.", TextToSpeech.QUEUE_FLUSH, null);
                                 held = true;
                             }
                         }, 3000); //time out 1s
@@ -114,7 +116,8 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
                             @Override
                             public void run() {
                                 // TODO : launch phone app and call
-                                speak(emergency.callLocal());
+
+                                tts.speak(emergency.callLocal(), TextToSpeech.QUEUE_FLUSH, null);
                                 held = true;
                             }
                         }, 8000); //time out 1s
