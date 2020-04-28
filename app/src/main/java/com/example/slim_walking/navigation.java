@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Queue;
@@ -39,6 +40,9 @@ import java.util.TimerTask;
 public class navigation extends FragmentActivity implements OnMapReadyCallback {
 
     private ArrayList<String> instructionQueue;
+    private ArrayList<Integer> counterQueue;
+    int counter = 0;
+    Toast toast;
     private double[] directions;
     private TextToSpeech tts;
     private static final int RECOGNIZER_RESULT = 1;
@@ -140,6 +144,7 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
         String angleDir = "";
         String temp;
         instructionQueue = new ArrayList<>();
+        counterQueue = new ArrayList<>();
         do {
             directions = route.next();
             if(directions[0] > 0) { // edge
@@ -165,20 +170,40 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
 
                         temp = "Turn " + Math.abs(angleDifference) + " degrees " + angleDir;
                         instructionQueue.add(temp);
+                        counterQueue.add(-1);
                     }
 
                 }
                 temp = "Take " + steps + " steps forward";
                 instructionQueue.add(temp);
+                counterQueue.add(steps);
             }
         } while(directions[0] != -1);
     }
 
     private void nextInstruction() {
-        if(instructionQueue.isEmpty())
+        if(counterQueue.isEmpty()) {
+
             speak("You have reached your destination!");
-        else
+            return;
+        }
+        if(counterQueue.get(0) == -1) {
             speak(instructionQueue.remove(0));
+            counterQueue.remove(0);
+        } else if (counter == 0){
+            speak(instructionQueue.get(0));
+            counter = counterQueue.get(0);
+        } else {
+            counter--;
+            if(counter == 0) {
+                instructionQueue.remove(0);
+                counterQueue.remove(0);
+                speak("stop");
+            } else {
+                speak(""+counter);
+            }
+        }
+
     }
 
     private void fetchLastLocation() {
@@ -192,7 +217,6 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
             public void onSuccess(Location location) {
                 if(location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()+", "+currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     supportMapFragment.getMapAsync(navigation.this);
                 }
@@ -226,6 +250,7 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
         tts.setPitch(1);
         tts.setSpeechRate(1);
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        toast(text);
     }
 
     @Override
@@ -242,5 +267,12 @@ public class navigation extends FragmentActivity implements OnMapReadyCallback {
         do{
             speakingEnd = tts.isSpeaking();
         } while (speakingEnd);
+    }
+
+    private void toast(String s) {
+        if(toast != null)
+            toast.cancel();
+        toast = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
