@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(MainActivity.this, homepage.class);
+                intent.putExtra("input", "destination");
                 startActivity(intent);
             }
         }, 3000);

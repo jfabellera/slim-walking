@@ -35,18 +35,27 @@ public class homepage extends AppCompatActivity {
     EmergencyController emergency;
     ImageButton inputButton;
     EditText dst;
+    boolean destinationMode = true;
     static String strDst;
+    String speechInputPrompt = "Say your destination";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
+        Intent myIntent = getIntent();
         instructions = new InstructionController(this);
         emergency = new EmergencyController(this);
 
         inputButton = findViewById(R.id.inputButton);
         dst = findViewById(R.id.dst);
+
+        if(myIntent.getStringExtra("input").equals("current_location")) {
+            destinationMode = false;
+            dst.setHint("Current Location");
+            speechInputPrompt = "Say your current location";
+        }
 
         // initialize text-to-speech variable
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -70,7 +79,15 @@ public class homepage extends AppCompatActivity {
         dst.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                Intent intent = new Intent(homepage.this, calculating.class);
+                Intent intent;
+                if(destinationMode) {
+                    intent = new Intent(homepage.this, calculating.class);
+                    intent.putExtra("input", "destination");
+                }
+                else {
+                    intent = new Intent(homepage.this, calculating.class);
+                    intent.putExtra("input", "current_location");
+                }
                 startActivity(intent);
             }
 
@@ -110,7 +127,7 @@ public class homepage extends AppCompatActivity {
                                 speak(""); // cancel tts if tts is running
                                 Intent speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                                 speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                                speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say your destination");
+                                speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, speechInputPrompt);
                                 startActivityForResult(speechIntent, RECOGNIZER_RESULT);
                                 held = true;
                             }

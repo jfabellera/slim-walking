@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="rooms">
+        <item>2.103</item>
+        <item>2.104</item>
+        <item>2.201</item>
+        <item>2.203</item>
+        <item>2.305</item>
+        <item>2.306</item>
+        <item>2.311</item>
+        <item>2.312</item>
+        <item>2.415</item>
+    </string-array>
+
+    <string-array name="multiEntranceRooms">
+        <item>2.102</item>
+        <item>2.410</item>
+        <item>2.412</item>
+        <item>exit</item>
+    </string-array>
+
+    <string-array name="sourceRooms">
+        <item>2.102A</item>
+        <item>2.102B</item>
+        <item>2.103</item>
+        <item>2.104</item>
+        <item>2.201</item>
+        <item>2.203</item>
+        <item>2.305</item>
+        <item>2.306</item>
+        <item>2.311</item>
+        <item>2.312</item>
+        <item>2.410A</item>
+        <item>2.410B</item>
+        <item>2.412A</item>
+        <item>2.412B</item>
+        <item>2.415</item>
+        <item>exitA</item>
+        <item>exitB</item>
+        <item>exitC</item>
+        <item>exitD</item>
+    </string-array>
+
+    <string-array name="destinationRooms">
         <item>2.102</item>
         <item>2.103</item>
         <item>2.104</item>
@@ -13,5 +54,6 @@
         <item>2.410</item>
         <item>2.412</item>
         <item>2.415</item>
+        <item>exit</item>
     </string-array>
 </resources>

@@ -16,10 +16,11 @@ public class RouteController {
     double[][] adjacencyMat;
     double[][] angleMat;
     Context context;
-    String destination;
-    String currLocation;
+    static String destination;
+    static String currLocation;
     Route route;
     int numNodes;
+
 
     public RouteController(Context current) {
         this.context = current;
@@ -58,7 +59,36 @@ public class RouteController {
         }
     }
 
-    public void dijkstra(int src) {
+    public void calculateRoute() {
+        double smallestTotalDistance = Double.MAX_VALUE;
+        int smallestDstIndex = -1;
+        boolean multi = false;
+        char multiExt = 'A';
+        int src, dst;
+        do {
+            src = getIndex(currLocation);
+            dst = getIndex(destination);
+            if(dst < 0) {
+                // multiple points exist for this node (input validation already done in calculating.java)
+                dst = getIndex(destination+multiExt);
+                multiExt++;
+                if(dst < 0) //(again)
+                    break;
+                else
+                    multi = true;
+            }
+            dijkstra(src, dst);
+            if(route.totalDistance < smallestTotalDistance) {
+                smallestTotalDistance = route.totalDistance;
+                smallestDstIndex = dst;
+            }
+        } while(multi);
+        dijkstra(src, smallestDstIndex);
+        System.out.println(route);
+    }
+
+    private void dijkstra(int src, int dst) {
+        route = new Route();
         double dist[] = new double[numNodes];
         Boolean sptSet[] = new Boolean[numNodes];
 
@@ -89,15 +119,40 @@ public class RouteController {
                 }
             }
         }
-        determinePath(30, parents);
-        System.out.println(route);
+        determinePath(dst, parents);
     }
 
     private void determinePath(int i, int[] parents) {
         if(i == -1)
             return;
         determinePath(parents[i], parents);
-        route.addNode(nodes[i]);
+        int j;
+        if(parents[i] == -1)
+            j = i;
+        else
+            j = parents[i];
+        route.addNode(nodes[i], adjacencyMat[j][i], angleMat[j][i]);
     }
 
+    public static void setDestination(String d) {
+        destination = d;
+    }
+
+    public static void setCurrLocation(String c) {
+        if(Character.isLetter(c.charAt(c.length()-1)))
+            c = c.substring(0, c.length() - 1).toLowerCase() + Character.toUpperCase(c.charAt(c.length()-1));
+        currLocation = c;
+    }
+
+    public void debug() {
+        System.out.println(destination + " " + currLocation);
+    }
+
+    private int getIndex(String nodeName) {
+        for(int i = 0; i < numNodes; i++) {
+            if(nodes[i].equals(nodeName))
+                return i;
+        }
+        return -1;
+    }
 }

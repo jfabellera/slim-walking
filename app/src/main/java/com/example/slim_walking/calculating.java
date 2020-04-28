@@ -12,14 +12,19 @@ import java.util.Locale;
 public class calculating extends AppCompatActivity {
     private TextToSpeech tts;
     private String[] rooms;
-    RouteController route;
+    static RouteController route;
+    boolean destinationMode = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculating);
 
+        Intent myIntent = getIntent();
+        if(myIntent.getStringExtra("input").equals("current_location")) {
+            destinationMode = false;
+        }
+
         route = new RouteController(this);
-        route.dijkstra(19);
 
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -31,20 +36,60 @@ public class calculating extends AppCompatActivity {
                         Log.e("TTS", "Language not supported");
                     } else {
                         // success
-                        speak("Calculating best route to your destination. Please wait.");
-                        rooms = getResources().getStringArray(R.array.rooms);
+                        if(destinationMode)
+                            rooms = getResources().getStringArray(R.array.destinationRooms);
+                        else
+                            rooms = getResources().getStringArray(R.array.sourceRooms);
                         String dst = homepage.strDst;
                         dst = dst.replaceAll("\\s","");
                         int roomIndex = findRoom(dst);
+                        // TODO : make sure dst is not the same as src
                         if(roomIndex < 0) {
-                            speak("Room not found, please try again.");
-                            Intent intent = new Intent(calculating.this, homepage.class);
-                            startActivity(intent);
+                            rooms = getResources().getStringArray(R.array.multiEntranceRooms);
+                            roomIndex = findRoom(dst);
+                            if(roomIndex < 0) {
+                                rooms = getResources().getStringArray(R.array.sourceRooms);
+                                roomIndex = findRoom(dst);
+                                if(roomIndex < 0) {
+                                    speak("Room not found, please try again.");
+                                    Intent intent = new Intent(calculating.this, homepage.class);
+                                    if(destinationMode)
+                                        intent.putExtra("input", "destination");
+                                    else
+                                        intent.putExtra("input", "current_location");
+                                    startActivity(intent);
+                                } else {
+                                    route.setCurrLocation(dst);
+                                    speak("Calculating best route to your destination. Please wait.");
+                                    route.debug();
+                                    route.calculateRoute();
+                                    waitTTS();
+                                    Intent intent = new Intent(calculating.this, navigation.class);
+                                    startActivity(intent);
+                                }
+                            } else {
+                                speak("Room has multiple entrances, please specify which.");
+                                Intent intent = new Intent(calculating.this, homepage.class);
+                                intent.putExtra("input", "current_location");
+                                startActivity(intent);
+                            }
                         } else {
+                            if(destinationMode) {
+                                route.setDestination(dst);
+                                speak("Please enter your current location.");
+                                Intent intent = new Intent(calculating.this, homepage.class);
+                                intent.putExtra("input", "current_location");
+                                startActivity(intent);
+                            } else {
+                                route.setCurrLocation(dst);
+                                speak("Calculating best route to your destination. Please wait.");
+                                route.debug();
+                                route.calculateRoute();
+                                waitTTS();
+                                Intent intent = new Intent(calculating.this, navigation.class);
+                                startActivity(intent);
+                            }
 
-
-                            Intent intent = new Intent(calculating.this, navigation.class);
-                            startActivity(intent);
                         }
                     }
                 } else {
@@ -62,17 +107,10 @@ public class calculating extends AppCompatActivity {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    // binary search the rooms
     private int findRoom(String r) {
-        int first = 0, last = rooms.length -1;
-        while(first <= last) {
-            int mid = first + (last - first)/2;
-            if(rooms[mid].equals(r))
-                return mid;
-            if(r.compareTo(rooms[mid]) < 0)
-                last = mid - 1;
-            if(r.compareTo(rooms[mid]) > 0)
-                first = mid + 1;
+        for(int i = 0; i < rooms.length; i++) {
+            if(r.equalsIgnoreCase(rooms[i]))
+                return i;
         }
         return -1;
     }
@@ -84,5 +122,12 @@ public class calculating extends AppCompatActivity {
             tts.shutdown();
         }
         super.onDestroy();
+    }
+
+    private void waitTTS() {
+        boolean speakingEnd = tts.isSpeaking();
+        do{
+            speakingEnd = tts.isSpeaking();
+        } while (speakingEnd);
     }
 }
